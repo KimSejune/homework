@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    html, body { height: 100%; }
+  </style>
+<body>
+  <p>A paragraph with a <button>button</button>.</p>
+  <script>
+    // body를 클릭했을 때 console.log('body')
+    document.addEventListener('click', function(){
+      console.log('body');
+    });
+    // p를 클릭했을 때 console.log('p')
+    var p = document.querySelector('p');
+    p.addEventListener('click', function(){
+      console.log('p');
+    });
+    // button를 클릭했을 때 console.log('button')
+
+    var button = document.querySelector('button');
+    button.addEventListener('click', function(){
+      console.log('button');
+    });
+    // 위와 같이 실행 된다.
+    // 버튼을 클릭 했을 때 콘솔에
+    // body
+    // button
+    // p
+    // 순서로 출력 되도록 작성하기
+  </script>
+</body>
+</html>
