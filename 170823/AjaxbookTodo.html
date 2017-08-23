@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+
+      <h4>Book List</h4>
+
+      <table class="table">
+        <thead>
+          <tr id="startList">
+            <td><input type="checkbox" id="totalCheck"></td>
+            <th>#</th>
+            <td>Title</td>
+            <td>Author</td>
+            <td>Price</td>
+          </tr>
+        </thead>
+        <tbody class="tbody">
+
+        </tbody>
+
+      </table>
+
+      <button id="deletebtn" class="btn btn-danger">Delete Book</button>
+      <button id="addbtn" class="btn btn-success">Add Book</button>
+      <button id="cancelbtn" class="btn btn-warning" style="visibility: hidden">Cancel Book</button>
+
+      <div id="inputArea" style="display: none;">
+        <br>
+        <div class="input-group-md">
+          <input type="text" id="title" class="form-control" placeholder="*Title">
+        </div>
+        <br>
+
+        <div class="input-group-md">
+          <input type="text" id="author" class="form-control" placeholder="Author">
+        </div>
+        <br>
+
+        <div class="input-group-md">
+          <input type="text" id="price" class="form-control" placeholder="Price">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+</body>
+<script>
+  let bookList = [{
+      id: 1,
+      title: 'HTML5',
+      author: 'Lee',
+      price: 2000
+    },
+    {
+      id: 2,
+      title: 'CSS3',
+      author: 'Kim',
+      price: 3000
+    },
+    {
+      id: 3,
+      title: 'JavaScript',
+      author: 'Park',
+      price: 5000
+    }
+  ];
+  console.log(bookList);
+
+
+  let table = document.querySelector('.table');
+  let tbody = document.querySelector('.tbody');
+  let totalcheck = document.getElementById('totalCheck');
+  let addbtn = document.getElementById('addbtn');
+  let inputArea = document.getElementById('inputArea');
+  let cancelbtn = document.getElementById('cancelbtn');
+
+  let deletebtn = document.getElementById('deletebtn');
+  let title = document.getElementById('title');
+  let author = document.getElementById('author');
+  let price = document.getElementById('price');
+
+  bookList.map(book => {
+    addTableItem(book);
+  });
+
+  // 값을 생성하기위해서 만든 함수
+  function addTableItem({
+    id,
+    title,
+    author,
+    price
+  }) {
+    tbody.insertAdjacentHTML('beforeend',
+      ` <tr>
+        <td><input type="checkbox" id="${id}"></td>
+        <th>${id}</th>
+        <td>${title}</td>
+        <td>${author}</td>
+        <td>${price}</td>
+      </tr>`
+    )
+  }
+
+  // toggle button이다. 전체버튼(e)에 event가 가해지면 el값들이 checked된다.
+  totalcheck.addEventListener('change', (e) => {
+    const allcheckArrList = [...document.querySelectorAll('tbody tr td input')].map(el => {
+      el.checked = e.target.checked;
+    });
+  });
+
+  // 요소를 제거한다.
+  deletebtn.addEventListener('click', () => {
+
+    // 체크가된 요소들을 checkArr에 담는다.
+    const checkArr = [...document.querySelectorAll('tbody tr td input[type=checkbox]:checked')].map(el => {
+      // input의 부모의부모인 tr를 제거한다.
+      tbody.removeChild(el.parentNode.parentNode);
+      // el.id값은 인덱스보다 1이 커서 1을 줄여서 1개만큼 splice를 해준다. map이라서 요소의 개수만큼 반복한다.
+      bookList.splice(el.id - 1, 1);
+
+      // bookList의 값이 줄었는지 확인해본다.
+      console.log(bookList);
+    });
+  });
+
+  addbtn.addEventListener('click', () => {
+    if (inputArea.style.display === 'none') {
+      inputArea.style.display = 'block';
+      cancelbtn.style.visibility = 'visible';
+    } else {
+      if (!title.value.trim()) {
+        return alert('Title입력은 필수입니다.')
+      } else {
+
+        let addList = {
+          id: bookList[bookList.length - 1].id + 1,
+          title: title.value,
+          value: author.value,
+          price: price.value
+        };
+        addTableItem(addList);
+        bookList.push(addList);
+        console.log(bookList);
+        title.focus();
+        title.value = '';
+      }
+
+    }
+  });
+
+  cancelbtn.addEventListener('click', () => {
+    inputArea.style.display = 'none';
+    cancelbtn.style.visibility = 'hidden';
+  });
+
+
+  // 1. 최상위 체크박스를 클릭하면 전체 체크박스 토글(on/off)
+  // 2. Delete Book 버튼이 클릭되면 체크된 book 리스트를 삭제
+  // 3. Add Book 버튼이 클릭되면 .add-form를 표시
+  // 4. Add Book 버튼이 클릭되면 Cancel 버튼 표시
+  // 5. .add-form이 표시된 상태에서 필수입력 대상인 Title이 입력되었으면 Add Book 버튼이 클릭 시, bookList 객체에 .add-form의 입력값을 추가하고 DOM 갱신
+  // 6. .add-form이 표시된 상태에서 필수입력 대상인 Title이 입력되지 않았으면 alert으로 입력되지 않았음을 경고
+  // 7. Cancel 버튼이 클릭되면 .add-form과 Cancel 버튼 비표시
+  // (*) 모든 선언문의 전역 선언 금지
+</script>
+
+</html>
